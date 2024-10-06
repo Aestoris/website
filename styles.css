@@ -1,0 +1,189 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: url('https://giffiles.alphacoders.com/220/220253.gif') no-repeat center center/cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Background blur effect */
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay on background image */
+    backdrop-filter: blur(10px); /* Blurs the background */
+    z-index: 1; /* Keep it behind the content */
+  }
+  
+  /* Container for the profile card */
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    z-index: 2; /* Ensure the content stays above the blurred background */
+  }
+  
+  /* Profile Card Styling */
+  .profile-card {
+    background-color: rgba(30, 30, 30, 0.7); /* Semi-transparent background */
+    padding: 2em;
+    border-radius: 35px;
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-style: preserve-3d;
+    backdrop-filter: blur(8px); /* Blurs the card's background */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Optional: border for a glass effect */
+  }
+  
+  .avatar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5em;
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  
+  .name {
+    font-size: 1.8em;
+    margin-bottom: 0.3em;
+  }
+  
+  .title {
+    font-size: 1.1em;
+    color: #8d99ae;
+    margin-bottom: 1em;
+  }
+  
+  .bio {
+    font-size: 1em;
+    margin-bottom: 1.5em;
+    color: #ddd;
+    line-height: 1.6;
+  }
+  
+  /* Social Media Links */
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+  }
+  
+  .social-links a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .social-links img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .social-links img:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Hover Effects for Profile Card */
+  .profile-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* CSS Variables for Rotation */
+  .profile-card.active {
+    transform: rotateY(var(--rotateX)) rotateX(var(--rotateY));
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 1024px) {
+    .profile-card {
+      padding: 1.8em;
+    }
+    .avatar {
+      width: 90px;
+      height: 90px;
+    }
+    .name {
+      font-size: 1.6em;
+    }
+    .title {
+      font-size: 1em;
+    }
+    .bio {
+      font-size: 0.95em;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .profile-card {
+      padding: 1.5em;
+      max-width: 350px;
+    }
+    .avatar {
+      width: 80px;
+      height: 80px;
+    }
+    .name {
+      font-size: 1.5em;
+    }
+    .title {
+      font-size: 0.95em;
+    }
+    .bio {
+      font-size: 0.9em;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .profile-card {
+      padding: 1.2em;
+      max-width: 90%;
+    }
+    .avatar {
+      width: 70px;
+      height: 70px;
+    }
+    .name {
+      font-size: 1.4em;
+    }
+    .title {
+      font-size: 0.9em;
+    }
+    .bio {
+      font-size: 0.85em;
+    }
+    .social-links a {
+      width: 32px;
+      height: 32px;
+    }
+  }
+  
