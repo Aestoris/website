@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
                 client_id: DISCORD_CLIENT_ID,
                 client_secret: DISCORD_CLIENT_SECRET,
                 grant_type: 'authorization_code',
-                redirect_uri: DISCORD_REDIRECT_URI,
+                redirect_uri: DISCORD_REDIRECT_URL,
                 code: code
             },
             headers: {
