@@ -1,5 +1,17 @@
 const axios = require('axios');
 
+app.get('/api/callback', async (req, res) => {
+  const { code } = req.query;
+
+  // Log the received code and other variables
+  console.log('Received authorization code:', code);
+  console.log('Client ID:', process.env.DISCORD_CLIENT_ID);
+  console.log('Client Secret:', process.env.DISCORD_CLIENT_SECRET);
+  console.log('Redirect URI:', process.env.DISCORD_REDIRECT_URI);
+
+  // Rest of your code...
+});
+
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 const REDIRECT_URI = process.env.DISCORD_CALLBACK_URL;
