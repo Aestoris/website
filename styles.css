@@ -26,7 +26,7 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.4); /* Dark overlay on background image */
-    backdrop-filter: blur(10px); /* Blurs the background */
+    backdrop-filter: blur(0px); /* Blurs the background */
     z-index: 1; /* Keep it behind the content */
   }
   
