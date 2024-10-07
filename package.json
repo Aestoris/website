@@ -11,6 +11,10 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "passport": "^0.7.0",
-    "passport-discord": "^0.1.4"
+    "passport-discord": "^0.1.4"  
+  },
+
+  "engines": {
+    "node": "14.x" 
   }
 }
