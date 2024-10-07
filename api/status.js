@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const token = process.env.DISCORD_BOT_TOKEN;
 
     // Replace 'YOUR_USER_ID' with the actual Discord user ID you want to fetch status for
-    const userId = 'YOUR_USER_ID';
+    const userId = '452445307654111233';
     
     // Make a request to Discord API to get user presence
     const response = await axios.get(`https://discord.com/api/v10/users/${userId}/profile`, {
