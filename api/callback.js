@@ -23,10 +23,10 @@ module.exports = async (req, res) => {
         // Exchange the code for an access token
         const response = await axios.post('https://discord.com/api/oauth2/token', null, {
             params: {
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET,
+                client_id: DISCORD_CLIENT_ID,
+                client_secret: DISCORD_CLIENT_SECRET,
                 grant_type: 'authorization_code',
-                redirect_uri: REDIRECT_URI,
+                redirect_uri: DISCORD_REDIRECT_URI,
                 code: code
             },
             headers: {
