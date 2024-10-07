@@ -1,48 +1,40 @@
-// api/callback.js
-import axios from 'axios';
+const axios = require('axios');
 
-export default async function handler(req, res) {
-    const { code } = req.query; // Der Authentifizierungscode von Discord
-    const clientId = process.env.DISCORD_CLIENT_ID;
-    const clientSecret = process.env.DISCORD_CLIENT_SECRET;
-    const redirectUri = 'https://aestoris.dev/api/callback';
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
-    // Überprüfe, ob der Code vorhanden ist
-    if (!code) {
-        return res.status(400).json({ error: 'Authorization code not provided.' });
-    }
+module.exports = async (req, res) => {
+    const { code } = req.query;
 
     try {
-        // Token-Anfrage an Discord
+        // Exchange the code for an access token
         const response = await axios.post('https://discord.com/api/oauth2/token', null, {
             params: {
-                client_id: clientId,
-                client_secret: clientSecret,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
                 grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: redirectUri,
+                redirect_uri: REDIRECT_URI,
+                code: code
             },
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         });
 
         const accessToken = response.data.access_token;
 
-        // Verwende das access_token, um Benutzerinformationen abzurufen
+        // Fetch the user data
         const userResponse = await axios.get('https://discord.com/api/users/@me', {
             headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
+                Authorization: `Bearer ${accessToken}`
+            }
         });
 
-        const user = userResponse.data;
-
-        // Hier kannst du den Benutzer in deiner Anwendung einloggen
-        // Zum Beispiel: Speichere den Benutzer in der Sitzung oder Datenbank
-        res.status(200).json(user);
+        // Send the user data back to the client
+        res.status(200).json(userResponse.data);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error retrieving access token.' });
+        console.error('Error fetching user data:', error);
+        res.status(500).send('Internal Server Error');
     }
-}
+};
