@@ -1,52 +1,41 @@
 const axios = require('axios');
 
-app.get('/api/callback', async (req, res) => {
-  const { code } = req.query;
+export default async function handler(req, res) {
+    const { code } = req.query; // Get the authorization code from the query parameters
 
-  // Log the received code and other variables
-  console.log('Received authorization code:', code);
-  console.log('Client ID:', process.env.DISCORD_CLIENT_ID);
-  console.log('Client Secret:', process.env.DISCORD_CLIENT_SECRET);
-  console.log('Redirect URI:', process.env.DISCORD_REDIRECT_URI);
+    // Log the received code and environment variables
+    console.log('Received authorization code:', code);
+    console.log('Client ID:', process.env.DISCORD_CLIENT_ID);
+    console.log('Client Secret:', process.env.DISCORD_CLIENT_SECRET);
+    console.log('Redirect URI:', process.env.DISCORD_REDIRECT_URI);
 
-  // Rest of your code...
-});
-
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URI = process.env.DISCORD_CALLBACK_URL;
-
-module.exports = async (req, res) => {
-    const { code } = req.query;
+    if (!code) {
+        return res.status(400).json({ error: 'Authorization code is missing.' });
+    }
 
     try {
-        // Exchange the code for an access token
+        // Make a request to Discord to exchange the code for an access token
         const response = await axios.post('https://discord.com/api/oauth2/token', null, {
             params: {
-                client_id: DISCORD_CLIENT_ID,
-                client_secret: DISCORD_CLIENT_SECRET,
+                client_id: process.env.DISCORD_CLIENT_ID,
+                client_secret: process.env.DISCORD_CLIENT_SECRET,
                 grant_type: 'authorization_code',
-                redirect_uri: DISCORD_REDIRECT_URL,
-                code: code
+                redirect_uri: process.env.DISCORD_REDIRECT_URI,
+                code: code,
             },
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
         });
 
         const accessToken = response.data.access_token;
+        console.log('Access Token:', accessToken);
 
-        // Fetch the user data
-        const userResponse = await axios.get('https://discord.com/api/users/@me', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
+        // Here, you would typically store the access token and possibly fetch user data.
 
-        // Send the user data back to the client
-        res.status(200).json(userResponse.data);
+        return res.status(200).json({ accessToken });
     } catch (error) {
         console.error('Error fetching user data:', error);
-        res.status(500).send('Internal Server Error');
+        return res.status(error.response?.status || 500).json({ error: error.message });
     }
-};
+}
