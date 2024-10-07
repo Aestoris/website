@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "Ein Projekt, das Discord-Login verwendet",
   "main": "index.js",
-  "scripts": {
-    "dev": "vercel dev",
-    "start": "node api/callback.js"
-},
 
   "dependencies": {
     "axios": "^1.7.7",
