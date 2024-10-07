@@ -1,41 +1,40 @@
-const axios = require('axios');
+// api/callback.js
+
+import axios from 'axios';
+import querystring from 'querystring';
 
 export default async function handler(req, res) {
-    const { code } = req.query; // Get the authorization code from the query parameters
+  const { code } = req.query;
+  const CLIENT_ID = process.env.CLIENT_ID;
+  const CLIENT_SECRET = process.env.CLIENT_SECRET;
+  const REDIRECT_URI = process.env.REDIRECT_URI;
 
-    // Log the received code and environment variables
-    console.log('Received authorization code:', code);
-    console.log('Client ID:', process.env.DISCORD_CLIENT_ID);
-    console.log('Client Secret:', process.env.DISCORD_CLIENT_SECRET);
-    console.log('Redirect URI:', process.env.DISCORD_REDIRECT_URI);
+  try {
+    // Exchange the code for an access token
+    const response = await axios.post('https://discord.com/api/oauth2/token', querystring.stringify({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: 'authorization_code',
+      redirect_uri: REDIRECT_URI,
+      code,
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
 
-    if (!code) {
-        return res.status(400).json({ error: 'Authorization code is missing.' });
-    }
+    // Get user data with access token
+    const userResponse = await axios.get('https://discord.com/api/users/@me', {
+      headers: {
+        Authorization: `Bearer ${response.data.access_token}`,
+      },
+    });
 
-    try {
-        // Make a request to Discord to exchange the code for an access token
-        const response = await axios.post('https://discord.com/api/oauth2/token', null, {
-            params: {
-                client_id: process.env.DISCORD_CLIENT_ID,
-                client_secret: process.env.DISCORD_CLIENT_SECRET,
-                grant_type: 'authorization_code',
-                redirect_uri: process.env.DISCORD_REDIRECT_URI,
-                code: code,
-            },
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        });
-
-        const accessToken = response.data.access_token;
-        console.log('Access Token:', accessToken);
-
-        // Here, you would typically store the access token and possibly fetch user data.
-
-        return res.status(200).json({ accessToken });
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-        return res.status(error.response?.status || 500).json({ error: error.message });
-    }
+    // Handle the user data (e.g., save it to a database or session)
+    console.log(userResponse.data);
+    res.status(200).json(userResponse.data); // Send user data as a response
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).send('Internal Server Error');
+  }
 }
