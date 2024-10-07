@@ -7,7 +7,7 @@
   
   body {
     font-family: 'Roboto', sans-serif;
-    background: url('https://giffiles.alphacoders.com/220/220253.gif') no-repeat center center/cover;
+    background: url('https://media1.tenor.com/m/gk4X-d4-SbkAAAAd/winter-anime.gif') no-repeat center center/cover;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -26,7 +26,7 @@
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.4); /* Dark overlay on background image */
-    backdrop-filter: blur(0px); /* Blurs the background */
+    backdrop-filter: blur(5px); /* Blurs the background */
     z-index: 1; /* Keep it behind the content */
   }
   
@@ -53,7 +53,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     transform-style: preserve-3d;
     backdrop-filter: blur(8px); /* Blurs the card's background */
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Optional: border for a glass effect */
+    border: 3px solid rgba(255, 255, 255, 0.2); /* Optional: border for a glass effect */
   }
   
   .avatar-container {
