@@ -4,6 +4,7 @@
   "description": "Ein Projekt, das Discord-Login verwendet",
   "main": "index.js",
   "scripts": {
+    "dev": "vercel dev"
 },
 
   "dependencies": {
