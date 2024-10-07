@@ -1,47 +1,48 @@
-// /api/callback.js
-
+// api/callback.js
 import axios from 'axios';
-import { URLSearchParams } from 'url';
 
-export default async (req, res) => {
-  const { code } = req.query;
+export default async function handler(req, res) {
+    const { code } = req.query; // Der Authentifizierungscode von Discord
+    const clientId = process.env.DISCORD_CLIENT_ID;
+    const clientSecret = process.env.DISCORD_CLIENT_SECRET;
+    const redirectUri = 'https://aestoris.dev/api/callback';
 
-  if (!code) {
-    return res.status(400).send('Code nicht vorhanden');
-  }
+    // Überprüfe, ob der Code vorhanden ist
+    if (!code) {
+        return res.status(400).json({ error: 'Authorization code not provided.' });
+    }
 
-  try {
-    // Token von Discord abrufen
-    const params = new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID,
-      client_secret: process.env.DISCORD_CLIENT_SECRET,
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: process.env.DISCORD_CALLBACK_URL,
-      scope: 'identify',
-    });
+    try {
+        // Token-Anfrage an Discord
+        const response = await axios.post('https://discord.com/api/oauth2/token', null, {
+            params: {
+                client_id: clientId,
+                client_secret: clientSecret,
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: redirectUri,
+            },
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
 
-    const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', params.toString(), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
+        const accessToken = response.data.access_token;
 
-    const { access_token } = tokenResponse.data;
+        // Verwende das access_token, um Benutzerinformationen abzurufen
+        const userResponse = await axios.get('https://discord.com/api/users/@me', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
 
-    // Benutzerinformationen abrufen
-    const userResponse = await axios.get('https://discord.com/api/users/@me', {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
+        const user = userResponse.data;
 
-    const user = userResponse.data;
-
-    // Benutzer-Session verwalten (z.B. Cookie setzen oder JWT erzeugen)
-    res.status(200).json({ message: 'Login erfolgreich', user });
-  } catch (error) {
-    console.error('Fehler bei der Authentifizierung:', error);
-    res.status(500).send('Fehler bei der Authentifizierung');
-  }
-};
+        // Hier kannst du den Benutzer in deiner Anwendung einloggen
+        // Zum Beispiel: Speichere den Benutzer in der Sitzung oder Datenbank
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error retrieving access token.' });
+    }
+}
