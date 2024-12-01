@@ -80,31 +80,6 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
-
-    <script>
-        // Fetch user status after successful login
-        async function fetchUserStatus() {
-            try {
-                const response = await fetch('/api/user'); // Adjust the API endpoint as needed
-                if (!response.ok) throw new Error('Network response was not ok');
-
-                const userData = await response.json();
-                if (userData) {
-                    document.getElementById('userName').textContent = userData.username; // Adjust property as needed
-                    document.getElementById('userAvatar').src = userData.avatar; // Adjust property as needed
-                    document.getElementById('userData').style.display = 'block'; // Show the user data
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        }
-
-        // Call fetchUserStatus on page load (you might want to call this after login)
-        window.onload = function() {
-            fetchUserStatus();
-        };
-    </script>
 </body>
 
 </html>
